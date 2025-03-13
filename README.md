@@ -64,5 +64,5 @@ POST /alarm {"state": true}
 ## 📜 **License**  
 This library is distributed under the MIT license.  
 
-## **✉ Зворотний зв'язок**  
+## **✉ Feedback**  
 If you have any questions or suggestions, feel free to contact [slyusarana@gmail.com](mailto:slyusarana@gmail.com).  
