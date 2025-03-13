@@ -1,0 +1,2395 @@
+<!DOCTYPE html>
+<html lang="uk-UA">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Централізований модуль керування</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Підключення Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="container">
+    <!-- Ліве меню у вигляді таблиці 2x3 -->
+    <div class="menu">
+      <div class="menu-item" data-subsystem="1">Централізований модуль</div>
+      <div class="menu-item" data-subsystem="2">Підсистема відеоспостереження</div>
+      <div class="menu-item" data-subsystem="3">Підсистема контролю доступу</div>
+      <div class="menu-item" data-subsystem="4">Підсистема виявлення руху</div>
+      <div class="menu-item" data-subsystem="5">Підсистема пожежної безпеки</div>
+      <div class="menu-item" data-subsystem="6">Підсистема сигналізації та оповіщення</div>
+    </div>
+    <!-- Правий блок зі слайдером -->
+    <div class="slider">
+      <div class="slide active" id="slide-1">
+        <h1>Централізований модуль комплексу системи безпеки</h1>
+        <p>Цей модуль виконує роль
+          головного контролера в системі, що об'єднує всі підсистеми та
+          забезпечує їх злагоджену роботу.</p>
+        <p><span class="important-text">Для початку роботи з системою налаштуйте підключення до інтернету!</span>
+        </p>
+        <div id="connection-status" class="connection-status"></div>
+        <h2>Wi-Fi Налаштування</h2>
+        <button id="myBtn">Підключитись до Wi-Fi</button>
+        <div id="myModal" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Введіть облікові дані Wi-Fi</h2>
+            <form id="wifiForm" method="POST"> <!-- Зміна на POST -->
+              <label for="ssid">SSID:</label><br>
+              <input type="text" id="ssid" name="ssid" required><br><br>
+              <label for="password">Password:</label><br>
+              <input type="password" id="password" name="password" required><br><br>
+              <input type="submit" value="Зберегти">
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="slide" id="slide-2">
+        <h1>Підсистема відеоспостереження</h1>
+        <p>Ця підсистема забезпечує відеоспостереження в реальному часі та дозволяє керувати деякими функціями камери.
+        </p>
+        <div class="data-panel">
+          <!-- Стан підсистеми -->
+          <h3>Стан підсистеми:</h3>
+          <p class="data-field">Зв'язок: <span id="connection-status-2" class="status">Очікування...</span></p>
+          <div class="video-stream">
+            <h4>Потокове відео:</h4>
+            <img id="videoStream" alt="Video Stream">
+          </div>
+          <!-- Панель керування камери -->
+          <div class="camera-controls">
+            <button onclick="startStreaming()" class="control-button">
+              Розпочати стрімінг <i class="fas fa-video"></i>
+            </button>
+            <button onclick="stopStreaming()" class="control-button">
+              Зупинити стрімінг <i class="fas fa-stop-circle"></i>
+            </button>
+            <button id="toggleLEDButton" onclick="toggleLED()" class="control-button">
+              Увімкнути LED-спалах <i class="fas fa-lightbulb"></i>
+            </button>
+            <button onclick="captureImage()" class="control-button">
+              Зробити фото <i class="fas fa-camera"></i>
+            </button>
+          </div>
+          <div class="photo-container">
+            <img id="capturedImage" src="/photo.jpg" alt="Зроблене фото">
+            <a id="downloadLink" href="#" download="photo.jpg">
+              <button class="download-button">Завантажити фото</button>
+            </a>
+          </div>
+          <!-- Налаштування параметрів -->
+          <div class="camera-settings">
+            <h4>Налаштування параметрів</h4>
+            <form id="camera-settings-form">
+              <!-- Розмір кадру -->
+              <div class="form-group">
+                <label for="framesize">Розмір кадру:</label>
+                <select id="framesize" name="framesize">
+                  <option value="0">96x96 (FRAMESIZE_96X96)</option>
+                  <option value="1">QQVGA (160x120)</option>
+                  <option value="2">QCIF (176x144)</option>
+                  <option value="3">HQVGA (240x176)</option>
+                  <option value="4">240x240 (FRAMESIZE_240X240)</option>
+                  <option value="5">QVGA (320x240)</option>
+                  <option value="6">CIF (400x296)</option>
+                  <option value="7">HVGA (480x320)</option>
+                  <option value="8" selected>VGA (640x480)</option>
+                  <option value="9">SVGA (800x600)</option>
+                  <option value="10">XGA (1024x768)</option>
+                  <option value="11">HD (1280x720)</option>
+                  <option value="12">SXGA (1280x1024)</option>
+                  <option value="13">UXGA (1600x1200)</option>
+                </select>
+              </div>
+              <!-- Якість зображення -->
+              <div class="form-group">
+                <label for="quality">Якість JPEG:</label>
+                <input type="number" id="quality" name="quality" min="10" max="63" value="25">
+              </div>
+              <!-- Яскравість -->
+              <div class="form-group">
+                <label for="brightness">Яскравість (-2 до 2):</label>
+                <input type="number" id="brightness" name="brightness" min="-2" max="2" step="1" value="0">
+              </div>
+              <!-- Контраст -->
+              <div class="form-group">
+                <label for="contrast">Контраст (-2 до 2):</label>
+                <input type="number" id="contrast" name="contrast" min="-2" max="2" step="1" value="0">
+              </div>
+              <!-- Спеціальні ефекти -->
+              <div class="form-group special-effects">
+                <label>Спеціальні ефекти:</label>
+                <div class="effects-grid">
+                  <div class="effect" data-effect="0" onclick="selectEffect(this)">
+                    <div class="effect-circle no-effect"></div>
+                    <span>Нормальний</span>
+                  </div>
+                  <div class="effect" data-effect="1" onclick="selectEffect(this)">
+                    <div class="effect-circle negative-effect"></div>
+                    <span>Негатив</span>
+                  </div>
+                  <div class="effect" data-effect="2" onclick="selectEffect(this)">
+                    <div class="effect-circle grayscale-effect"></div>
+                    <span>Ч/Б</span>
+                  </div>
+                  <div class="effect" data-effect="3" onclick="selectEffect(this)">
+                    <div class="effect-circle red-effect"></div>
+                    <span>Червоний</span>
+                  </div>
+                  <div class="effect" data-effect="4" onclick="selectEffect(this)">
+                    <div class="effect-circle green-effect"></div>
+                    <span>Зелений</span>
+                  </div>
+                  <div class="effect" data-effect="5" onclick="selectEffect(this)">
+                    <div class="effect-circle blue-effect"></div>
+                    <span>Синій</span>
+                  </div>
+                  <div class="effect" data-effect="6" onclick="selectEffect(this)">
+                    <div class="effect-circle sepia-effect"></div>
+                    <span>Сепія</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Кнопка надсилання -->
+              <div class="form-group">
+                <button type="button" onclick="sendSettings()" class="control-button">
+                  Зберегти налаштування <i class="fas fa-save"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+          <!-- Результати взаємодії -->
+          <div class="interaction-log">
+            <h4>Лог останніх дій:</h4>
+            <ul id="action-log">
+              <li>Очікування дій користувача...</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide" id="slide-3">
+        <h1>Підсистема контролю доступу</h1>
+        <p>
+          Підсистема контролю доступу забезпечує надійний захист за допомогою сенсора відбитків пальців та RFID
+          зчитувача карт.
+          Вона дозволяє ідентифікувати особу та відкривати електромеханічний замок тільки для авторизованих
+          користувачів, підвищуючи безпеку приміщення.
+        </p>
+        <div class="data-panel" id="accessSection">
+          <h3>Стан підсистеми:</h3>
+          <p class="data-field">Зв'язок: <span id="connection-status-3" class="status">Очікування...</span></p>
+          <p class="data-field">Остання спроба: <span id="accessLastSuccess">Успішна</span></p>
+          <p class="data-field">Кількість спроб: <span id="accessTotalAttempts">0</span></p>
+          <button class="btn-open-door" id="toggleDoorButton">Відкрити двері</button>
+          <div id="responseMessage" class="message"></div>
+          <div class="change-password">
+            <div class="password-wrapper">
+              <input type="password" id="newPassword" class="password-input" placeholder="Введіть новий пароль" />
+              <i id="togglePassword" class="fas fa-eye password-toggle"></i>
+            </div>
+            <button id="changePasswordButton" class="btn-change-password">
+              Змінити пароль
+            </button>
+          </div>
+          <div id="responseMessage" class="message"></div>
+
+          <button class="btn-show-history" onclick="toggleAccessAttempts()">Показати історію</button>
+          <div id="access-attempts-history" style="display: none; margin-top: 10px;">
+            <h4>Історія спроб доступу:</h4>
+            <ul id="access-attempts-list-3" class="attempt-list"></ul>
+            <button id="sort-access" class="btn-sort" onclick="sortAccessAttempts()">Сортувати</button>
+            <button id="load-more-access" class="btn-load-more" onclick="loadMoreAccessAttempts()"
+              style="display: none;">Завантажити ще</button>
+            <!-- Пошук за датою та часом -->
+            <div id="search-date-time-container-1">
+              <h4>Пошук за датою та часом:</h4>
+              <label for="start-date-1">Від:</label>
+              <input type="date" id="start-date-1" class="date-input">
+              <input type="time" id="start-time-1" class="time-input">
+
+              <label for="end-date-1">До:</label>
+              <input type="date" id="end-date-1" class="date-input">
+              <input type="time" id="end-time-1" class="time-input">
+
+              <button id="search-by-date-time-1" class="btn-search"
+                onclick="searchByDateTime('accessData', 1)">Пошук</button>
+
+              <div id="search-results-1" style="display: none;">
+                <h4>Результати пошуку:</h4>
+                <ul id="search-results-list-1" class="attempt-list"></ul>
+              </div>
+            </div>
+
+          </div>
+          <!-- Графік спроб доступу -->
+          <button id="toggle-chart-accessData" onclick="toggleChart('accessData')">Відобразити графік спроб
+            доступу</button>
+          <div id="chart-container-accessData" style="display: none;">
+            <label for="chart-type-accessData">Оберіть тип графіка:</label>
+            <select id="chart-type-accessData">
+              <option value="line">Лінійний графік (Line Chart)</option>
+              <option value="bar">Стовпчиковий графік (Bar Chart)</option>
+              <option value="pie">Кругова діаграма (Pie Chart)</option>
+              <option value="scatter">Точковий графік (Scatter Plot)</option>
+              <option value="area">Площа під графіком (Area Chart)</option>
+              <option value="stacked">Складений стовпчиковий графік (Stacked Bar Chart)</option>
+            </select>
+            <label for="record-count-accessData">Кількість останніх записів:</label>
+            <input type="number" id="record-count-accessData" min="10" max="100" value="10">
+            <button id="build-chart-accessData" onclick="buildChart('accessData')">Побудувати</button>
+            <button id="bth-download-chart" onclick="downloadChartButton('accessData')">Завантажити графік</button>
+            <canvas id="accessData-chart"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="slide" id="slide-4">
+        <h1>Підсистема виявлення руху</h1>
+        <p>
+          Ця підсистема призначена для моніторингу руху в зоні охорони. При виявленні руху фіксує час та ініціює
+          відповідні дії для забезпечення безпеки.
+        </p>
+        <div class="data-panel" id="motionSection">
+          <h3>Стан підсистеми:</h3>
+          <p class="data-field">Зв'язок: <span id="connection-status-4" class="status">Очікування...</span></p>
+          <p class="data-field">Рух: <span id="motionDetected">Не виявлено</span>
+          <p class="data-field">Час останнього виявлення руху: <span id="motionTime">Рух не виявлено</span>
+          </p>
+          <button class="btn-show-history" onclick="toggleDetectionHistory()">Показати історію</button>
+          <div id="detection-history" style="display: none; margin-top: 10px;">
+            <h4>Історія виявленого руху:</h4>
+            <ul id="detection-list"></ul>
+            <button id="sort-detection" class="btn-sort" onclick="sortDetectionHistory()">Сортувати</button>
+            <button id="load-more-detection" class="btn-load-more" onclick="loadMoreDetectionHistory()"
+              style="display: none;">Завантажити ще</button>
+            <div id="search-date-time-container-2">
+              <h4>Пошук за датою та часом:</h4>
+              <label for="start-date-2">Від:</label>
+              <input type="date" id="start-date-2" class="date-input">
+              <input type="time" id="start-time-2" class="time-input">
+
+              <label for="end-date-2">До:</label>
+              <input type="date" id="end-date-2" class="date-input">
+              <input type="time" id="end-time-2" class="time-input">
+
+              <button id="search-by-date-time-2" class="btn-search"
+                onclick="searchByDateTime('motionData', 2)">Пошук</button>
+
+              <div id="search-results-2" style="display: none;">
+                <h4>Результати пошуку:</h4>
+                <ul id="search-results-list-2" class="attempt-list"></ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Графік виявленого руху -->
+          <button id="toggle-chart-motionData" onclick="toggleChart('motionData')">Відобразити графік виявленого
+            руху</button>
+          <div id="chart-container-motionData" style="display: none;">
+            <label for="chart-type-motionData">Оберіть тип графіка:</label>
+            <select id="chart-type-motionData">
+              <option value="line">Лінійний графік (Line Chart)</option>
+              <option value="bar">Стовпчиковий графік (Bar Chart)</option>
+              <option value="pie">Кругова діаграма (Pie Chart)</option>
+              <option value="scatter">Точковий графік (Scatter Plot)</option>
+              <option value="area">Площа під графіком (Area Chart)</option>
+              <option value="stacked">Складений стовпчиковий графік (Stacked Bar Chart)</option>
+            </select>
+            <label for="record-count-motionData">Кількість останніх записів:</label>
+            <input type="number" id="record-count-motionData" min="10" max="100" value="10">
+            <button id="build-chart-motionData" onclick="buildChart('motionData')">Побудувати</button>
+            <button id="bth-download-chart" onclick="downloadChartButton('motionData')">Завантажити графік</button>
+            <canvas id="motionData-chart"></canvas>
+          </div>
+
+        </div>
+      </div>
+      <div class="slide" id="slide-5">
+        <!-- Розмітка для підсистеми пожежної безпеки з анімованими показниками -->
+        <h1>Підсистема пожежної безпеки</h1>
+        <p>
+          Підсистема пожежної безпеки включає датчики газу, температури, вологості та тиску. Вона реагує на зміни
+          навколишнього середовища, попереджаючи про можливу пожежу та забезпечуючи ввімкнення
+          тривоги при необхідності
+        </p>
+        <div class="data-panel" id="fireSection">
+          <h3>Стан підсистеми:</h3>
+          <p class="data-field">Зв'язок: <span id="connection-status-5" class="status">Очікування...</span></p>
+          <!-- Температура -->
+          <div class="sensor">
+            <p class="data-field">Температура:</p>
+            <div class="circle" id="temperature-circle">
+              <span id="fireTemp">22°C</span>
+            </div>
+          </div>
+          <!-- Вологість -->
+          <div class="sensor">
+            <p class="data-field">Вологість:</p>
+            <div class="circle" id="humidity-circle">
+              <span id="fireHum">45%</span>
+            </div>
+          </div>
+          <!-- Газ -->
+          <div class="sensor">
+            <p class="data-field">Газ:</p>
+            <div class="circle" id="gas-circle">
+              <span id="fireMq2">0 ppm</span>
+            </div>
+          </div>
+          <!-- Тиск -->
+          <div class="sensor">
+            <p class="data-field">Тиск:</p>
+            <div class="circle" id="pressure-circle">
+              <span id="firePres">1013 hPa</span>
+            </div>
+          </div>
+          <button class="btn-show-history" onclick="toggleFireHistory()">Показати історію</button>
+          <div id="fire-history" style="display: none; margin-top: 10px;">
+            <h4>Історія даних сенсорів:</h4>
+            <ul id="fire-list"></ul>
+            <button id="sort-fire" class="btn-sort" onclick="sortFireHistory()">Сортувати</button>
+            <button id="load-more-fire" class="btn-load-more" onclick="loadMoreFireHistory()"
+              style="display: none;">Завантажити
+              ще</button>
+            <div id="search-date-time-container-3">
+              <h4>Пошук за датою та часом:</h4>
+              <label for="start-date-3">Від:</label>
+              <input type="date" id="start-date-3" class="date-input">
+              <input type="time" id="start-time-3" class="time-input">
+
+              <label for="end-date-3">До:</label>
+              <input type="date" id="end-date-3" class="date-input">
+              <input type="time" id="end-time-3" class="time-input">
+
+              <button id="search-by-date-time-3" class="btn-search"
+                onclick="searchByDateTime('motionData', 3)">Пошук</button>
+
+              <div id="search-results-3" style="display: none;">
+                <h4>Результати пошуку:</h4>
+                <ul id="search-results-list-3" class="attempt-list"></ul>
+              </div>
+            </div>
+          </div>
+          <!-- Графік даних сенсорів -->
+          <button id="toggle-chart-fireData" onclick="toggleChart('fireData')">Відобразити графік даних
+            сенсорів</button>
+          <div id="chart-container-fireData" style="display: none;">
+            <label for="chart-type-fireData">Оберіть тип графіка:</label>
+            <select id="chart-type-fireData">
+              <option value="line">Лінійний графік (Line Chart)</option>
+              <option value="bar">Стовпчиковий графік (Bar Chart)</option>
+              <option value="radar">Радарний графік (Radar Chart)</option>
+              <option value="stacked">Складений стовпчиковий графік (Stacked Bar Chart)</option>
+              <option value="histogram">Гістограма (Histogram)</option>
+              <option value="radarNormal">Радарний графік із нормалізованими значеннями (Radar Chart with Normalized
+                Values)</option>
+            </select>
+            <label for="record-count-fireData">Кількість останніх записів:</label>
+            <input type="number" id="record-count-fireData" min="10" max="100" value="10">
+            <button id="build-chart-fireData" onclick="buildChart('fireData')">Побудувати</button>
+            <button id="bth-download-chart" onclick="downloadChartButton('fireData')">Завантажити графік</button>
+            <canvas id="fireData-chart"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="slide" id="slide-6">
+        <h1>Підсистема сигналізації та оповіщення</h1>
+        <p>
+          Підсистема сигналізації та оповіщення призначена для моніторингу та сповіщення про небезпеку через
+          телеграм-бота та активування звукових сигналів на колонках.
+          Вона забезпечує оперативне інформування користувача про загрози та дозволяє вживати необхідні заходи безпеки.
+        </p>
+        <div class="data-panel">
+          <h3>Стан підсистеми:</h3>
+          <p class="data-field">Зв'язок: <span id="connection-status-6" class="status">Очікування...</span></p>
+          <p class="data-field">Останнє повідомлення: <span id="last-message-6">Безпека під контролем</span></p>
+          <p class="data-field">Активована сигналізація: <span id="alarm-status-6">Ні</span></p>
+          <!-- Елемент налаштування гучності -->
+          <div class="volume-control">
+            <label for="volume-slider">Налаштування гучності сигналізації:</label>
+            <div class="slider-container">
+              <input type="range" id="volume-slider" min="0" max="30" value="15" step="1" />
+              <span id="volume-value">15</span>
+            </div>
+          </div>
+          <button class="btn-test-alarm" id="testAlarmButton">Перевірити сигналізацію</button>
+          <div id="alarmStatus" class="hidden"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+  <script src="script.js" defer></script>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js';
+    import { getDatabase, ref, get, push, remove } from 'https://www.gstatic.com/firebasejs/9.9.3/firebase-database.js';
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyC9CrGkH1FMjpUxn8sUr2mxCeN6GHJtXoA",
+      authDomain: "security-system-a73bc.firebaseapp.com",
+      databaseURL: "https://security-system-a73bc-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "security-system-a73bc",
+      storageBucket: "security-system-a73bc.firebasestorage.app",
+      messagingSenderId: "513345027988",
+      appId: "1:513345027988:web:8b16ac72eabe34aabf5981",
+      measurementId: "G-KTZNDTG6ZN"
+    };
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    window.searchByDateTime = function (dataPath, containerId) {
+      const startDate = document.getElementById(`start-date-${containerId}`).value;
+      const startTime = document.getElementById(`start-time-${containerId}`).value;
+      const endDate = document.getElementById(`end-date-${containerId}`).value;
+      const endTime = document.getElementById(`end-time-${containerId}`).value;
+
+      if (!startDate || !startTime || !endDate || !endTime) {
+        alert('Будь ласка, заповніть усі поля!');
+        return;
+      }
+      const startTimestamp = new Date(`${startDate}T${startTime}`).getTime();
+      const endTimestamp = new Date(`${endDate}T${endTime}`).getTime();
+
+      if (startTimestamp >= endTimestamp) {
+        alert('Початковий час має бути меншим за кінцевий!');
+        return;
+      }
+      const dataRef = ref(database, dataPath);
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const filteredData = keys.filter((key) => {
+            const timestamp = new Date(data[key].timestamp).getTime();
+            return timestamp >= startTimestamp && timestamp <= endTimestamp;
+          }).map((key) => data[key]);
+          displaySearchResults(filteredData, containerId);
+        } else {
+          alert('Дані не знайдені!');
+        }
+      }).catch((error) => {
+        console.error('Помилка при отриманні даних:', error);
+      });
+    }
+
+    function displaySearchResults(results, containerId) {
+      const resultsContainer = document.getElementById(`search-results-${containerId}`);
+      const resultsList = document.getElementById(`search-results-list-${containerId}`);
+      resultsList.innerHTML = ''; 
+
+      if (results.length === 0) {
+        resultsContainer.style.display = 'block';
+        resultsList.innerHTML = '<li>Результати не знайдені</li>';
+        return;
+      }
+
+      results.forEach((data) => {
+        const listItem = document.createElement('li');
+
+        if (data.lastAttemptSuccess !== undefined && data.totalAttempts !== undefined) {
+          listItem.textContent = `Часова мітка: ${data.timestamp}, Спроба доступу: ${data.lastAttemptSuccess ? 'Успішна' : 'Неуспішна'}, Загальна кількість: ${data.totalAttempts}`;
+        } else if (data.motionDetected !== undefined && data.timeDetected !== undefined) {
+          listItem.textContent = `Часова мітка: ${data.timestamp}, Рух: ${data.motionDetected ? 'Виявлено' : 'Не виявлено'}, Час виявлення: ${data.timeDetected}`;
+        } else if (data.temp !== undefined && data.pres !== undefined && data.hum !== undefined && data.mq2 !== undefined) {
+          listItem.textContent = `Часова мітка: ${data.timestamp}, Температура: ${data.temp}, Тиск: ${data.pres}, Вологість: ${data.hum}, MQ2: ${data.mq2}`;
+        } else {
+          listItem.textContent = `Часова мітка: ${data.timestamp}, Дані: ${JSON.stringify(data)}`; // Для непередбачених форматів
+        }
+
+        resultsList.appendChild(listItem);
+      });
+
+      resultsContainer.style.display = 'block';
+    }
+
+    let accessAttemptsCount = 0;
+    let detectionHistoryCount = 0;
+    let fireHistoryCount = 0;
+
+    const pageSize = 10; 
+    function toggleHistory(historyDivId, listId, loadMoreButtonId, dataRefPath, countVar, listItemFormatter) {
+      const historyDiv = document.getElementById(historyDivId);
+      const list = document.getElementById(listId);
+      const loadMoreButton = document.getElementById(loadMoreButtonId);
+
+      if (historyDiv.style.display === "none") {
+        historyDiv.style.display = "block";
+        window[countVar] = 0;
+        list.innerHTML = '';
+        loadMoreButton.style.display = "none";
+
+        const dataRef = ref(database, dataRefPath);
+        get(dataRef).then((snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            const keys = Object.keys(data);
+            const slicedData = keys.slice(0, pageSize);
+
+            slicedData.forEach((key) => {
+              const listItem = document.createElement('li');
+              listItem.textContent = listItemFormatter(data[key]);
+              list.appendChild(listItem);
+            });
+
+            window[countVar] = pageSize;
+            if (keys.length > pageSize) {
+              loadMoreButton.style.display = "inline-block";
+            }
+          } else {
+            console.log("Дані не знайдені");
+          }
+        }).catch((error) => {
+          console.error("Помилка при отриманні даних:", error);
+        });
+      } else {
+        historyDiv.style.display = "none";
+      }
+    }
+
+    function loadMoreHistory(listId, loadMoreButtonId, dataRefPath, countVar, listItemFormatter) {
+      const list = document.getElementById(listId);
+      const loadMoreButton = document.getElementById(loadMoreButtonId);
+
+      const dataRef = ref(database, dataRefPath);
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedData = keys.slice(window[countVar], window[countVar] + pageSize);
+
+          slicedData.forEach((key) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = listItemFormatter(data[key]);
+            list.appendChild(listItem);
+          });
+
+          window[countVar] += pageSize;
+          if (window[countVar] >= keys.length) {
+            loadMoreButton.style.display = "none";
+          }
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    window.toggleAccessAttempts = function () {
+      toggleHistory("access-attempts-history", "access-attempts-list-3", "load-more-access", '/accessData', 'accessAttemptsCount', (data) =>
+        `Часова мітка: ${data.timestamp}, Спроба доступу: ${data.lastAttemptSuccess ? 'Успішна' : 'Неуспішна'}, Загальна кількість: ${data.totalAttempts}`
+      );
+    }
+
+    window.loadMoreAccessAttempts = function () {
+      loadMoreHistory("access-attempts-list-3", "load-more-access", '/accessData', 'accessAttemptsCount', (data) =>
+        `Часова мітка: ${data.timestamp}, Спроба доступу: ${data.lastAttemptSuccess ? 'Успішна' : 'Неуспішна'}, Загальна кількість: ${data.totalAttempts}`
+      );
+    }
+
+    window.toggleDetectionHistory = function () {
+      toggleHistory("detection-history", "detection-list", "load-more-detection", '/motionData', 'detectionHistoryCount', (data) =>
+        `Часова мітка: ${data.timestamp}, Рух: ${data.motionDetected ? 'Виявлено' : 'Не виявлено'}, Час виявлення: ${data.timeDetected}`
+      );
+    }
+
+    window.loadMoreDetectionHistory = function () {
+      loadMoreHistory("detection-list", "load-more-detection", '/motionData', 'detectionHistoryCount', (data) =>
+        `Часова мітка: ${data.timestamp}, Рух: ${data.motionDetected ? 'Виявлено' : 'Не виявлено'}, Час виявлення: ${data.timeDetected}`
+      );
+    }
+
+    window.toggleFireHistory = function () {
+      toggleHistory("fire-history", "fire-list", "load-more-fire", '/fireData', 'fireHistoryCount', (data) =>
+        `Часова мітка: ${data.timestamp}, Температура: ${data.temp}, Тиск: ${data.pres}, Вологість: ${data.hum}, MQ2: ${data.mq2}`
+      );
+    }
+
+    window.loadMoreFireHistory = function () {
+      loadMoreHistory("fire-list", "load-more-fire", '/fireData', 'fireHistoryCount', (data) =>
+        `Часова мітка: ${data.timestamp}, Температура: ${data.temp}, Тиск: ${data.pres}, Вологість: ${data.hum}, MQ2: ${data.mq2}`
+      );
+    }
+    window.sortHistory = function (listId, sortButtonId, dataRefPath, sortOrderVar, listItemFormatter) {
+      const list = document.getElementById(listId);
+      const sortButton = document.getElementById(sortButtonId);
+
+      const dataRef = ref(database, dataRefPath);
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          keys.sort((a, b) => {
+            const dateA = new Date(data[a].timestamp);
+            const dateB = new Date(data[b].timestamp);
+            return window[sortOrderVar] ? dateA - dateB : dateB - dateA;
+          });
+          list.innerHTML = '';
+          keys.forEach((key) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = listItemFormatter(data[key]);
+            list.appendChild(listItem);
+          });
+          sortButton.textContent = window[sortOrderVar] ? "Сортувати від найновішого" : "Сортувати від найстарішого";
+          window[sortOrderVar] = !window[sortOrderVar];
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    window.sortAccessAttempts = function () {
+      sortHistory("access-attempts-list-3", "sort-access", '/accessData', 'accessSortOrder', (data) =>
+        `Часова мітка: ${data.timestamp}, Спроба доступу: ${data.lastAttemptSuccess ? 'Успішна' : 'Неуспішна'}, Загальна кількість: ${data.totalAttempts}`
+      );
+    }
+
+    window.sortDetectionHistory = function () {
+      sortHistory("detection-list", "sort-detection", '/motionData', 'detectionSortOrder', (data) =>
+        `Часова мітка: ${data.timestamp}, Рух: ${data.motionDetected ? 'Виявлено' : 'Не виявлено'}, Час виявлення: ${data.timeDetected}`
+      );
+    }
+
+    window.sortFireHistory = function () {
+      sortHistory("fire-list", "sort-fire", '/fireData', 'fireSortOrder', (data) =>
+        `Часова мітка: ${data.timestamp}, Температура: ${data.temp}, Тиск: ${data.pres}, Вологість: ${data.hum}, MQ2: ${data.mq2}`
+      );
+    }
+
+    window.toggleChart = function (type) {
+      const chartContainer = document.getElementById(`chart-container-${type}`);
+      chartContainer.style.display = chartContainer.style.display === 'none' ? 'block' : 'none';
+    }
+    window.toggleChart = function (type) {
+      const container = document.getElementById(`chart-container-${type}`);
+      const button = document.getElementById(`toggle-chart-${type}`);
+
+      if (container) {
+        const isVisible = container.style.display === "block";
+        container.style.display = isVisible ? "none" : "block";
+        if (button) {
+          button.textContent = isVisible
+            ? `Відобразити графік ${type === 'accessData' ? 'спроб доступу' : type === 'motionData' ? 'виявленого руху' : 'даних сенсорів'}`
+            : `Приховати графік ${type === 'accessData' ? 'спроб доступу' : type === 'motionData' ? 'виявленого руху' : 'даних сенсорів'}`;
+        }
+      }
+    };
+
+
+    window.buildChart = function (type) {
+      console.log(`${type}`);
+      const chartType = document.getElementById(`chart-type-${type}`).value;
+      console.log(`${chartType}`);
+      switch (type) {
+        case 'accessData':
+          if (chartType === 'line') {
+            buildAccessChartLine(type);
+            break;
+          }
+          else if (chartType === 'bar') {
+            buildAccessChartBar(type);
+            break;
+          }
+          else if (chartType === 'pie') {
+            buildAccessChartPie(type);
+            break;
+          }
+          else if (chartType === 'scatter') {
+            buildAccessChartScatter(type);
+            break;
+          }
+          else if (chartType === 'area') {
+            buildAccessChartArea(type);
+            break;
+          }
+          else if (chartType === 'stacked') {
+            buildAccessChartStackedBar(type);
+            break;
+          }
+        case 'motionData':
+          if (chartType === 'line') {
+            buildMotionChartLine(type);
+            break;
+          }
+          else if (chartType === 'bar') {
+            buildMotionChartBar(type);
+            break;
+          }
+          else if (chartType === 'pie') {
+            buildMotionChartPie(type);
+            break;
+          }
+          else if (chartType === 'scatter') {
+            buildMotionChartScatter(type);
+            break;
+          }
+          else if (chartType === 'area') {
+            buildMotionChartArea(type);
+            break;
+          }
+          else if (chartType === 'stacked') {
+            buildMotionChartStackedBar(type);
+            break;
+          }
+        case 'fireData':
+          if (chartType === 'line') {
+            buildFireChartLine(type);
+            break;
+          }
+          else if (chartType === 'bar') {
+            buildFireChartBar(type);
+            break;
+          }
+          else if (chartType === 'stacked') {
+            buildFireChartStacked(type);
+            break;
+          }
+          else if (chartType === 'radar') {
+            buildFireChartRadar(type);
+            break;
+          }
+          else if (chartType === 'histogram') {
+            buildFireChartHistogram(type);
+            break;
+          }
+          else if (chartType === 'radarNormal') {
+            buildFireChartRadarNormal(type);
+            break;
+          }
+        default:
+          console.log("Невідомий тип графіка");
+      }
+    }
+
+    function buildFireChartRadarNormal(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const humidityData = chartData.map(item => item.hum);
+          const gasData = chartData.map(item => item.mq2);
+          const pressureData = chartData.map(item => item.pres);
+          const temperatureData = chartData.map(item => item.temp);
+          const timestampData = chartData.map(item => item.timestamp);
+
+          const maxHumidity = Math.max(...humidityData);
+          const maxGas = Math.max(...gasData);
+          const maxPressure = Math.max(...pressureData);
+          const maxTemperature = Math.max(...temperatureData);
+
+          const normalizedHumidityData = humidityData.map(val => val / maxHumidity);
+          const normalizedGasData = gasData.map(val => val / maxGas);
+          const normalizedPressureData = pressureData.map(val => val / maxPressure);
+          const normalizedTemperatureData = temperatureData.map(val => val / maxTemperature);
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'radar',
+            data: {
+              labels: timestampData,
+              datasets: [{
+                label: 'Вологість',
+                data: normalizedHumidityData,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+              }, {
+                label: 'Концентрація газу',
+                data: normalizedGasData,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2,
+                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+              }, {
+                label: 'Тиск',
+                data: normalizedPressureData,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+              }, {
+                label: 'Температура',
+                data: normalizedTemperatureData,
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 2,
+                pointBackgroundColor: 'rgba(153, 102, 255, 1)',
+              }]
+            },
+            options: {
+              responsive: true,
+              scale: {
+                ticks: {
+                  beginAtZero: true,
+                },
+                pointLabels: {
+                  fontSize: 12,
+                }
+              },
+              elements: {
+                line: {
+                  tension: 0.3
+                }
+              },
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                tooltip: {
+                  enabled: true,
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildFireChartHistogram(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const humidityData = chartData.map(item => item.hum);
+          const gasData = chartData.map(item => item.mq2);
+          const pressureData = chartData.map(item => item.pres);
+          const temperatureData = chartData.map(item => item.temp);
+          const timestampData = chartData.map(item => item.timestamp);
+
+          const formattedTimestamps = timestampData.map(timestamp => {
+            const date = new Date(timestamp);
+            return date.toLocaleString();
+          });
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: formattedTimestamps,
+              datasets: [{
+                label: 'Вологість',
+                data: humidityData,
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+              }, {
+                label: 'Концентрація газу',
+                data: gasData,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+              }, {
+                label: 'Тиск',
+                data: pressureData,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+              }, {
+                label: 'Температура',
+                data: temperatureData,
+                backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1,
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Час'
+                  },
+                  ticks: {
+                    maxRotation: 45,
+                    minRotation: 30
+                  }
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: 'Значення'
+                  },
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                tooltip: {
+                  enabled: true,
+                  callbacks: {
+                    title: function (tooltipItem) {
+                      return 'Час: ' + tooltipItem[0].label;
+                    },
+                    label: function (tooltipItem) {
+                      const label = tooltipItem.dataset.label || '';
+                      const value = tooltipItem.raw;
+                      return label + ': ' + value.toFixed(2);
+                    }
+                  }
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildFireChartRadar(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const humidityData = chartData.map(item => item.hum);
+          const gasData = chartData.map(item => item.mq2);
+          const pressureData = chartData.map(item => item.pres);
+          const temperatureData = chartData.map(item => item.temp);
+          const timestampData = chartData.map(item => item.timestamp);
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'radar',
+            data: {
+              labels: timestampData,
+              datasets: [{
+                label: 'Вологість',
+                data: humidityData,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+              }, {
+                label: 'Концентрація газу',
+                data: gasData,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2,
+                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+              }, {
+                label: 'Тиск',
+                data: pressureData,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+              }, {
+                label: 'Температура',
+                data: temperatureData,
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 2,
+                pointBackgroundColor: 'rgba(153, 102, 255, 1)',
+              }]
+            },
+            options: {
+              responsive: true,
+              scale: {
+                ticks: {
+                  beginAtZero: true,
+                },
+                pointLabels: {
+                  fontSize: 12,
+                }
+              },
+              elements: {
+                line: {
+                  tension: 0.3
+                }
+              },
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                tooltip: {
+                  enabled: true,
+                  callbacks: {
+                    title: function (tooltipItem) {
+                      return 'Час: ' + tooltipItem[0].label;
+                    },
+                    label: function (tooltipItem) {
+                      const label = tooltipItem.dataset.label || '';
+                      const value = tooltipItem.raw;
+                      return label + ': ' + value.toFixed(2);
+                    }
+                  }
+                },
+                datalabels: {
+                  display: true,
+                  align: 'top',
+                  formatter: function (value, context) {
+                    const timeLabel = timestampData[context.dataIndex];
+                    const humidity = humidityData[context.dataIndex];
+                    const gas = gasData[context.dataIndex];
+                    const pressure = pressureData[context.dataIndex];
+                    const temperature = temperatureData[context.dataIndex];
+                    return `${timeLabel}: Humidity: ${humidity}%, Gas: ${gas}, Pressure: ${pressure}hPa, Temp: ${temperature}°C`;
+                  },
+                  color: 'black',
+                  font: {
+                    weight: 'bold',
+                    size: 10
+                  }
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildFireChartStacked(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const timeLabels = chartData.map(item => item.timestamp);
+
+          const humidityData = chartData.map(item => item.hum);
+          const gasData = chartData.map(item => item.mq2);
+          const pressureData = chartData.map(item => item.pres);
+          const temperatureData = chartData.map(item => item.temp);
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: timeLabels,
+              datasets: [
+                {
+                  label: 'Вологість (%)',
+                  data: humidityData,
+                  backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1,
+                  stack: 'stack1'
+                },
+                {
+                  label: 'Концентрація газу (mq2)',
+                  data: gasData,
+                  backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                  borderColor: 'rgba(153, 102, 255, 1)',
+                  borderWidth: 1,
+                  stack: 'stack1'
+                },
+                {
+                  label: 'Тиск (hPa)',
+                  data: pressureData,
+                  backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                  borderColor: 'rgba(255, 159, 64, 1)',
+                  borderWidth: 1,
+                  stack: 'stack2'
+                },
+                {
+                  label: 'Температура (°C)',
+                  data: temperatureData,
+                  backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1,
+                  stack: 'stack2'
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  type: 'category',
+                  labels: timeLabels,
+                  stacked: true
+                },
+                y: {
+                  beginAtZero: true,
+                  stacked: true
+                }
+              },
+              plugins: {
+                legend: {
+                  position: 'top'
+                },
+                tooltip: {
+                  mode: 'index',
+                  intersect: false,
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildFireChartBar(type) {
+      const dataRefPath = `/${type}`; // Шлях до даних у Firebase (або іншому джерелі)
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const timeLabels = chartData.map(item => item.timestamp);
+
+          const humidityData = chartData.map(item => item.hum);
+          const gasData = chartData.map(item => item.mq2);
+          const pressureData = chartData.map(item => item.pres);
+          const temperatureData = chartData.map(item => item.temp);
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: timeLabels,
+              datasets: [
+                {
+                  label: 'Вологість (%)',
+                  data: humidityData,
+                  backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1
+                },
+                {
+                  label: 'Концентрація газу (mq2)',
+                  data: gasData,
+                  backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                  borderColor: 'rgba(153, 102, 255, 1)',
+                  borderWidth: 1
+                },
+                {
+                  label: 'Тиск (hPa)',
+                  data: pressureData,
+                  backgroundColor: 'rgba(255, 159, 64, 0.5)',
+                  borderColor: 'rgba(255, 159, 64, 1)',
+                  borderWidth: 1
+                },
+                {
+                  label: 'Температура (°C)',
+                  data: temperatureData,
+                  backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  type: 'category',
+                  labels: timeLabels,
+                  stacked: true
+                },
+                y: {
+                  beginAtZero: true,
+                }
+              },
+              plugins: {
+                legend: {
+                  position: 'top'
+                },
+                tooltip: {
+                  mode: 'index',
+                  intersect: false,
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildFireChartLine(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const timeLabels = chartData.map(item => item.timestamp);
+
+          const humidityData = chartData.map(item => item.hum);
+          const gasData = chartData.map(item => item.mq2);
+          const pressureData = chartData.map(item => item.pres);
+          const temperatureData = chartData.map(item => item.temp);
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: timeLabels,
+              datasets: [
+                {
+                  label: 'Вологість (%)',
+                  data: humidityData,
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  fill: true
+                },
+                {
+                  label: 'Концентрація газу (mq2)',
+                  data: gasData,
+                  borderColor: 'rgba(153, 102, 255, 1)',
+                  backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                  fill: true
+                },
+                {
+                  label: 'Тиск (hPa)',
+                  data: pressureData,
+                  borderColor: 'rgba(255, 159, 64, 1)',
+                  backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                  fill: true
+                },
+                {
+                  label: 'Температура (°C)',
+                  data: temperatureData,
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                  fill: true
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  type: 'category',
+                  labels: timeLabels,
+                },
+                y: {
+                  beginAtZero: false
+                }
+              },
+              plugins: {
+                legend: {
+                  position: 'top'
+                },
+                tooltip: {
+                  mode: 'index',
+                  intersect: false,
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildMotionChartStackedBar(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const timestamps = chartData.map((item) => new Date(item.timestamp).toLocaleString('uk-UA', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+
+          const motionDetectedData = chartData.map((item) => item.motionDetected ? 1 : 0);
+          const motionNotDetectedData = chartData.map((item) => item.motionDetected ? 0 : 1);
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: timestamps,
+              datasets: [
+                {
+                  label: 'Рух виявлений',
+                  data: motionDetectedData,
+                  backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1,
+                  stack: 'stack1',
+                },
+                {
+                  label: 'Рух не виявлений',
+                  data: motionNotDetectedData,
+                  backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1,
+                  stack: 'stack1',
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: 'Кількість подій'
+                  }
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildMotionChartArea(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const timestamps = chartData.map((item) => new Date(item.timestamp).toLocaleString('uk-UA', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+
+          const successCounts = chartData.filter((item) => item.motionDetected).length;
+          const failureCounts = chartData.length - successCounts;
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: timestamps,
+              datasets: [
+                {
+                  label: 'Рух виявлений',
+                  data: chartData.map((item) => item.motionDetected ? 1 : 0),
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  fill: true,
+                  tension: 0.1
+                },
+                {
+                  label: 'Рух не виявлений',
+                  data: chartData.map((item) => item.motionDetected ? 0 : 1),
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                  fill: true,
+                  tension: 0.1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  min: -0.5,
+                  max: 1.5,
+                  ticks: {
+                    stepSize: 1,
+                    callback: function (value) {
+                      return value === 1 ? 'Виявлено' : value === 0 ? 'Не виявлено' : '';
+                    }
+                  },
+                  title: {
+                    display: true,
+                    text: 'Результат виявлення руху'
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  display: true
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildMotionChartScatter(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const timestamps = chartData.map((item) => new Date(item.timestamp).toLocaleString('uk-UA', { hour: '2-digit', minute: '2-digit', second: '2-digit' })); // Форматований час для осі X
+
+          const motionDetectedData = chartData.filter((item) => item.motionDetected)
+            .map((item, index) => ({
+              x: index,
+              y: 1,
+              label: timestamps[index]
+            }));
+
+          const motionNotDetectedData = chartData.filter((item) => !item.motionDetected)
+            .map((item, index) => ({
+              x: index,
+              y: 0,
+              label: timestamps[index]
+            }));
+
+          const scatterData = [...motionDetectedData, ...motionNotDetectedData];
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+              datasets: [
+                {
+                  label: 'Рух виявлений',
+                  data: motionDetectedData,
+                  backgroundColor: 'rgba(75, 192, 192, 1)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1,
+                  pointRadius: 6,
+                  pointHoverRadius: 8,
+                  pointHoverBackgroundColor: 'rgba(75, 192, 192, 1)',
+                  pointHoverBorderColor: 'rgba(75, 192, 192, 1)',
+                },
+                {
+                  label: 'Рух не виявлений',
+                  data: motionNotDetectedData,
+                  backgroundColor: 'rgba(255, 99, 132, 1)',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1,
+                  pointRadius: 6,
+                  pointHoverRadius: 8,
+                  pointHoverBackgroundColor: 'rgba(255, 99, 132, 1)',
+                  pointHoverBorderColor: 'rgba(255, 99, 132, 1)',
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  type: 'linear',
+                  position: 'bottom',
+                  ticks: {
+                    autoSkip: true,
+                    maxTicksLimit: 10,
+                    maxRotation: 0,
+                    minRotation: 0,
+                    callback: function (value, index, values) {
+                      return timestamps[value] || '';
+                    }
+                  },
+                  title: {
+                    display: true,
+                    text: 'Час (індекс запису)'
+                  }
+                },
+                y: {
+                  beginAtZero: true,
+                  min: -0.5,
+                  max: 1.5,
+                  ticks: {
+                    stepSize: 1,
+                    callback: function (value) {
+                      if (value === 1.5) {
+                        return 'Рух виявлений';
+                      } else if (value === 0.5) {
+                        return 'Не визначено';
+                      } else if (value === -0.5) {
+                        return 'Рух не виявлений';
+                      }
+                    }
+                  },
+                  title: {
+                    display: true,
+                    text: 'Результат руху'
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  position: 'top'
+                },
+                tooltip: {
+                  callbacks: {
+                    title: function (tooltipItem) {
+                      return 'Час: ' + timestamps[tooltipItem[0].dataIndex];
+                    }
+                  }
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildMotionChartPie(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const detectedCount = chartData.filter((item) => item.motionDetected).length;
+          const notDetectedCount = chartData.length - detectedCount;
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'pie',
+            data: {
+              labels: ['Виявлено', 'Не виявлено'],
+              datasets: [
+                {
+                  data: [detectedCount, notDetectedCount],
+                  backgroundColor: [
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 99, 132, 0.8)'
+                  ],
+                  borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)'
+                  ],
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: true,
+                  position: 'top',
+                  labels: {
+                    font: {
+                      size: 14
+                    }
+                  }
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      const label = context.label || '';
+                      const value = context.raw || 0;
+                      const total = context.dataset.data.reduce((acc, val) => acc + val, 0);
+                      const percentage = ((value / total) * 100).toFixed(1);
+                      return `${label}: ${value} (${percentage}%)`;
+                    }
+                  }
+                }
+              },
+              animation: {
+                duration: 500
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildMotionChartBar(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const detectedCount = chartData.filter((item) => item.motionDetected).length;
+          const notDetectedCount = chartData.length - detectedCount;
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ['Виявлено', 'Не виявлено'],
+              datasets: [
+                {
+                  label: 'Статус руху',
+                  data: [detectedCount, notDetectedCount],
+                  backgroundColor: [
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 99, 132, 0.8)'
+                  ],
+                  borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)'
+                  ],
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    stepSize: 1
+                  },
+                  title: {
+                    display: true,
+                    text: 'Кількість записів'
+                  }
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Статус'
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      return `${context.label}: ${context.raw}`;
+                    }
+                  }
+                }
+              },
+              animation: {
+                duration: 500
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildMotionChartLine(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const timestamps = chartData.map((item) => new Date(item.timestamp).toLocaleString());
+          const motionDetectedData = chartData.map((item) => (item.motionDetected ? 1 : 0));
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: timestamps,
+              datasets: [
+                {
+                  label: 'Рух виявлено',
+                  data: motionDetectedData,
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                  fill: false,
+                  tension: 0.3
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  ticks: {
+                    maxRotation: 45,
+                    minRotation: 0,
+                    autoSkip: true,
+                    maxTicksLimit: 10
+                  }
+                },
+                y: {
+                  ticks: {
+                    callback: function (value) {
+                      return value === 1 ? 'Так' : 'Ні';
+                    },
+                    stepSize: 1,
+                    max: 1,
+                    min: 0
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  display: true
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      return context.raw === 1 ? 'Рух виявлено' : 'Рух не виявлено';
+                    }
+                  }
+                }
+              },
+              animation: {
+                duration: 800,
+                easing: 'easeOutQuad'
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildAccessChartStackedBar(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const timestamps = chartData.map((item) => item.timestamp);
+          const successCounts = chartData.filter((item) => item.lastAttemptSuccess).length;
+          const failureCounts = chartData.length - successCounts;
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: timestamps,
+              datasets: [
+                {
+                  label: 'Успішні',
+                  data: chartData.map((item) => item.lastAttemptSuccess ? 1 : 0),
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1,
+                  stack: 'stack1',
+                },
+                {
+                  label: 'Неуспішні',
+                  data: chartData.map((item) => item.lastAttemptSuccess ? 0 : 1),
+                  backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1,
+                  stack: 'stack1',
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildAccessChartArea(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const timestamps = chartData.map((item) => item.timestamp);
+          const successCounts = chartData.filter((item) => item.lastAttemptSuccess).length;
+          const failureCounts = chartData.length - successCounts;
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: timestamps,
+              datasets: [
+                {
+                  label: 'Успішні',
+                  data: chartData.map((item) => item.lastAttemptSuccess ? 1 : 0),
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  fill: true,
+                  tension: 0.1
+                },
+                {
+                  label: 'Неуспішні',
+                  data: chartData.map((item) => item.lastAttemptSuccess ? 0 : 1),
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                  fill: true,
+                  tension: 0.1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  min: -0.5,
+                  max: 1.5,
+                  ticks: {
+                    stepSize: 1,
+                    callback: function (value) {
+                      return value === 1 ? 'Успішно' : value === 0 ? 'Неуспішно' : '';
+                    }
+                  },
+                  title: {
+                    display: true,
+                    text: 'Результат спроби'
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  display: true
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildAccessChartScatter(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const timestamps = chartData.map((item) => new Date(item.timestamp).toLocaleString('uk-UA', { hour: '2-digit', minute: '2-digit', second: '2-digit' })); // Форматований час для осі X
+
+          const successData = chartData.filter((item) => item.lastAttemptSuccess)
+            .map((item, index) => ({
+              x: index,
+              y: 1,
+              label: timestamps[index]
+            }));
+
+          const failureData = chartData.filter((item) => !item.lastAttemptSuccess)
+            .map((item, index) => ({
+              x: index,
+              y: 0,
+              label: timestamps[index]
+            }));
+
+          const scatterData = [...successData, ...failureData];
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+              datasets: [
+                {
+                  label: 'Успішні спроби',
+                  data: successData,
+                  backgroundColor: 'rgba(75, 192, 192, 1)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1,
+                  pointRadius: 6,
+                  pointHoverRadius: 8,
+                  pointHoverBackgroundColor: 'rgba(75, 192, 192, 1)',
+                  pointHoverBorderColor: 'rgba(75, 192, 192, 1)',
+                },
+                {
+                  label: 'Неуспішні спроби',
+                  data: failureData,
+                  backgroundColor: 'rgba(255, 99, 132, 1)',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1,
+                  pointRadius: 6,
+                  pointHoverRadius: 8,
+                  pointHoverBackgroundColor: 'rgba(255, 99, 132, 1)',
+                  pointHoverBorderColor: 'rgba(255, 99, 132, 1)',
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  type: 'linear',
+                  position: 'bottom',
+                  ticks: {
+                    autoSkip: true,
+                    maxTicksLimit: 10,
+                    maxRotation: 0,
+                    minRotation: 0,
+                    callback: function (value, index, values) {
+                      return timestamps[value] || '';
+                    }
+                  },
+                  title: {
+                    display: true,
+                    text: 'Час (індекс запису)'
+                  }
+                },
+                y: {
+                  beginAtZero: true,
+                  min: -0.5,
+                  max: 1.5,
+                  ticks: {
+                    stepSize: 1,
+                    callback: function (value) {
+                      if (value === 1.5) {
+                        return 'Успішно';
+                      } else if (value === 0.5) {
+                        return 'Не визначено';
+                      } else if (value === -0.5) {
+                        return 'Неуспішно';
+                      }
+                    }
+                  },
+                  title: {
+                    display: true,
+                    text: 'Результат спроби'
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  position: 'top'
+                },
+                tooltip: {
+                  callbacks: {
+                    title: function (tooltipItem) {
+                      return 'Час: ' + timestamps[tooltipItem[0].dataIndex];
+                    }
+                  }
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildAccessChartBar(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const timestamps = chartData.map((item) => item.timestamp);
+          const successCounts = chartData.filter((item) => item.lastAttemptSuccess).length;
+          const failureCounts = chartData.length - successCounts;
+
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ['Успішні', 'Неуспшні'],
+              datasets: [
+                {
+                  label: 'Спроби',
+                  data: [successCounts, failureCounts],
+                  backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(255, 99, 132, 0.2)'
+                  ],
+                  borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 99, 132, 1)'
+                  ],
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              },
+              plugins: {
+                legend: {
+                  display: false
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildAccessChartPie(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount);
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const successCounts = chartData.filter((item) => item.lastAttemptSuccess).length;
+          const failureCounts = chartData.length - successCounts;
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'pie',
+            data: {
+              labels: ['Успішні', 'Неуспішні'],
+              datasets: [
+                {
+                  label: 'Спроби',
+                  data: [successCounts, failureCounts],
+                  backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(255, 99, 132, 0.2)'
+                  ],
+                  borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 99, 132, 1)'
+                  ],
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: true
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    function buildAccessChartLine(type) {
+      const dataRefPath = `/${type}`;
+      const dataRef = ref(database, dataRefPath);
+      const recordCount = parseInt(document.getElementById(`record-count-${type}`).value);
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const ctx = chartCanvas.getContext('2d');
+
+      // Видаляємо попередній графік, якщо він існує
+      if (chartCanvas.chartInstance) {
+        chartCanvas.chartInstance.destroy();
+      }
+
+      get(dataRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+          const slicedKeys = keys.slice(-recordCount); // Беремо останні записи
+
+          const chartData = slicedKeys.map((key) => data[key]);
+
+          const timestamps = chartData.map((item) => item.timestamp);
+          const successCounts = chartData.filter((item) => item.lastAttemptSuccess).length;
+          const failureCounts = chartData.length - successCounts;
+
+          // Створюємо графік
+          chartCanvas.chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: timestamps, // Використовуємо мітки часу для осі X
+              datasets: [
+                {
+                  label: 'Успішні',
+                  data: chartData.map((item) => item.lastAttemptSuccess ? 1 : 0),
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  fill: false,
+                  tension: 0.1
+                },
+                {
+                  label: 'Неуспішні',
+                  data: chartData.map((item) => item.lastAttemptSuccess ? 0 : 1),
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                  fill: false,
+                  tension: 0.1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        } else {
+          console.log("Дані не знайдені");
+        }
+      }).catch((error) => {
+        console.error("Помилка при отриманні даних:", error);
+      });
+    }
+
+    window.downloadChartButton = function (type, chartType) {
+      const chartCanvas = document.getElementById(`${type}-chart`);
+      const downloadButton = document.getElementById('bth-download-chart');
+      if (!chartCanvas.chartInstance) {
+        alert('Спочатку потрібно побудувати графік!');
+        return;
+      }
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCanvas.width = chartCanvas.width;
+      tempCanvas.height = chartCanvas.height;
+      tempCtx.fillStyle = chartCanvas.style.backgroundColor || '#ffffff';
+      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      tempCtx.drawImage(chartCanvas, 0, 0);
+      const imageUrl = tempCanvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      const currentDate = new Date().toLocaleString('sv-SE', { timeZone: 'Europe/Kiev' });
+      const formattedDate = currentDate.replace(/[^\d]/g, '').slice(0, 15);
+      link.href = imageUrl;
+      link.download = `${type}-${formattedDate}.png`;
+      link.click();
+    }
+
+  </script>
+</body>
+
+</html>
