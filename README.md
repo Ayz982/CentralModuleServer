@@ -44,9 +44,9 @@ void loop() {
 ✔️ **ArduinoJson:** for handling JSON  
 
 ## 🔗 **Main Features**  
-🔹 **Wi-Fi access point:** standalone management via browser. 
-🔹 **I2C communication:** data exchange with notification subsystems. 
-🔹 **API implementation:** control and manage security parameters. 
+🔹 **Wi-Fi access point:** standalone management via browser.  
+🔹 **I2C communication:** data exchange with notification subsystems.  
+🔹 **API implementation:** control and manage security parameters.  
 🔹 **Status display** on the LilyGo T-Display.  
 
 ## 📋 **API**  
