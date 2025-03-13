@@ -36,6 +36,12 @@ void loop() {
     server.handleClient(); // Handle HTTP requests
 }
 ```
+### To use this library, you need to include the following dependencies:  
+✔️ **WiFi:** for connecting to Wi-Fi  
+✔️ **LittleFS:** for the file system  
+✔️ **TFT_eSPI:** for working with the TFT display   
+✔️ **WebServer:** for setting up the web server  
+✔️ **ArduinoJson:** for handling JSON  
 
 ## 🔗 **Main Features**  
 🔹 **Wi-Fi access point:** standalone management via browser. 
