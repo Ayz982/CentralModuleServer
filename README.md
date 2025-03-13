@@ -1,27 +1,27 @@
 # **CentralModuleServer**
-**📌 Бібліотека для реалізації вебсервера комплексної системи безпеки на основі IoT**  
+**📌 A library for implementing a web server for an IoT-based comprehensive security system**
 
-## **📖 Опис**  
-**CentralModuleServer** – це бібліотека для розгортання вебсервера на **LilyGo T-Display ESP32**, який керує **комплексною системою безпеки**. Вона забезпечує:  
+## **📖 Description**  
+**CentralModuleServer** is a library for deploying a web server on a **LilyGo T-Display ESP32** that manages a **comprehensive security system**. It provides:  
 
-✅ **Моніторинг та управління підсистемами** (відеоспостереження, датчики руху, пожежна безпека, контроль доступу тощо).  
-✅ **Обмін даними через I2C** для зв’язку з підпорядкованим модулем.  
-✅ **Збереження конфігурації** за допомогою LittleFS.  
-✅ **Вбудовану точку доступу** (AP Mode) для автономного керування.  
-✅ **Гнучке API** для отримання статусу та налаштування параметрів.  
+✅ **Monitoring and management of subsystems** (video surveillance, motion sensors, fire safety, access control, etc.).  
+✅ **Data exchange via I2C** to communicate with subordinate modules.  
+✅ **Configuration storage** using LittleFS.  
+✅ **Built-in access point** (AP Mode) for standalone management.  
+✅ **Flexible API** for obtaining system status and configuring parameters.  
 
-## **🚀 Встановлення**  
-1️⃣ **Завантаження через GitHub**  
-Склонуйте репозиторій у папку бібліотек Arduino:  
+## **🚀 Installation**  
+1️⃣ **Download via GitHub**  
+Clone the repository into the Arduino libraries folder:  
 ```sh
 cd ~/Documents/Arduino/libraries
 git clone https://github.com/Ayz982/CentralModuleServer CentralModuleServer
 ```
-2️⃣ **Додавання через ZIP**  
-Завантажте [останню версію](https://github.com/Ayz982/CentralModuleServer).  
-Відкрийте **Arduino IDE → Скетч → Додати .ZIP бібліотеку →** Виберіть архів.
+2️⃣ **Add via ZIP**  
+Download [the latest version](https://github.com/Ayz982/CentralModuleServer).  
+Open **Arduino IDE → Sketch → Include Library →** Add .ZIP Library, and select the archive.
 
-## **🛠 Використання**
+## **🛠 Usage**
 ```cpp
 #include <CentralModuleServer.h>
 
@@ -29,40 +29,40 @@ CentralModuleServer server;
 
 void setup() {
     Serial.begin(115200);
-    server.begin(); // Запуск вебсервера
+    server.begin(); // Start the web server
 }
 
 void loop() {
-    server.handleClient(); // Обробка HTTP-запитів
+    server.handleClient(); // Handle HTTP requests
 }
 ```
 
-## 🔗 **Основні можливості**  
-🔹 **Wi-Fi точка доступу:** автономне управління через браузер.  
-🔹 **Робота з I2C:** обмін даними з підсистемою оповіщення.  
-🔹 **Реалізація API:** керування параметрами безпеки.  
-🔹 **Відображення статусу** на дисплеї LilyGo T-Display.  
+## 🔗 **Main Features**  
+🔹 **Wi-Fi access point:** standalone management via browser. 
+🔹 **I2C communication:** data exchange with notification subsystems. 
+🔹 **API implementation:** control and manage security parameters. 
+🔹 **Status display** on the LilyGo T-Display.  
 
 ## 📋 **API**  
-📌 **Отримання статусу підсистем:**  
+📌 **Retrieve subsystem status:**  
 ```bash
 GET /status
 ```
-📌 **Зміна налаштувань Wi-Fi:**  
+📌 **Change Wi-Fi settings:**  
 ```bash
 POST /setwifi {"ssid": "MyNetwork", "password": "MyPass"}
 ```
-📌 **Запит відкриття дверей:**  
+📌 **Request to open doors:**  
 ```bash
 POST /opendoor
 ```
-📌 **Активація сигналізації:**  
+📌 **Activate alarm system:**  
 ```bash
 POST /alarm {"state": true}
 ```
 
-## 📜 **Ліцензія**  
-Ця бібліотека поширюється за ліцензією MIT.  
+## 📜 **License**  
+This library is distributed under the MIT license.  
 
 ## **✉ Зворотний зв'язок**  
-Якщо у вас є запитання або пропозиції, пишіть на [slyusarana@gmail.com](mailto:slyusarana@gmail.com).  
+If you have any questions or suggestions, feel free to contact [slyusarana@gmail.com](mailto:slyusarana@gmail.com).  
